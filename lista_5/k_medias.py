@@ -58,16 +58,43 @@ def dividir_clusters(n_clusters, matriz):
 
 def reagrupar_clusters(distancias, clusters):
     n_clusters = len(clusters)
-    splited = []
+    divisao = []
     n_distancias = len(distancias)
+
+    # código da internet
     for indice in range(n_clusters):
         start = int(indice * n_distancias / n_clusters)
         end = int((indice + 1) * n_distancias / n_clusters)
-        splited.append(distancias[start:end])
+        divisao.append(distancias[start:end])
+    # ----------------------------------------
+    # //div/h2[.='Consultas']/../button
+    # //div[@id='Consultasbh-header']/..//table//th/button[2]
 
     qtd_clusters = len(clusters)
-    for indice in range(rows):
-        distancias
+    novos_clusters = clusters
+    for indice in range(qtd_clusters):
+        distancias_centroide = tuple(zip(*divisao[indice]))
+        indice_auxiliar = 0
+        for comparacao in distancias_centroide:
+            minimo = min(comparacao)
+            indice_minimo = comparacao.index(minimo)
+            if indice_minimo != indice:
+                aux = clusters[indice][indice_auxiliar]
+                np.delete(novos_clusters[indice], indice_auxiliar)
+                np.append(novos_clusters[indice_minimo], aux)
+            indice_auxiliar += 1
+    centroides = novos_centroides(qtd_clusters, novos_clusters)
+    return centroides, novos_clusters
+
+def novos_centroides(qtd_clusters, clusters):
+    centroides = []
+    for indice in range(qtd_clusters):
+        somatorio = sum(clusters[indice])
+        centroides.append(somatorio/(len(clusters[indice])))
+    return centroides
+
+
+
 
 
 # leitura dos dados
@@ -87,5 +114,9 @@ dados_normalizado_tabela = escalar.transform(tabela)
 for i in range(4, 20):
     centroides = criar_centroides(i)
     clusters = dividir_clusters(i, dados_normalizado_tabela)
-    distancias, erro = calcular_distancias_e_erro_reconstrucao(centroides, clusters)
-    reagrupar_clusters(distancias, clusters)
+    for indice in range(20):
+        distancias, erro = calcular_distancias_e_erro_reconstrucao(centroides, clusters)
+        centroides, clusters = reagrupar_clusters(distancias, clusters)
+        plt.plot(centroides[0][0], centroides[0][1], 'o')
+        plt.show()
+    print(erro)
