@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
 from random import *
-import itertools
 
 
 def indice_de(matriz, valor, indice_final):
@@ -163,19 +162,18 @@ divisao_tabela = np.hsplit(tabela, np.array([COLS - 1]))
 X = divisao_tabela[0]
 Y = divisao_tabela[1]
 
-# normalizando os X
+# normalizando X
 escalar_x = preprocessing.MinMaxScaler(feature_range=(0, 1))
 escalar_x.fit(X)
 X_normalizado = escalar_x.transform(X)
 
-# normalizando os Y
+# normalizando Y
 escalar_y = preprocessing.MinMaxScaler(feature_range=(0, 1))
 escalar_y.fit(Y)
 Y_normalizado = escalar_y.transform(Y)
 
-# normalizando os dados
+# unindo dados normalizados
 dados_normalizado_tabela = np.concatenate((X_normalizado, Y_normalizado), axis=1)
-print(dados_normalizado_tabela)
 
 for i in range(4, 20):
 
